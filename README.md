@@ -1,4 +1,3 @@
-[TOC]
 
 
 微服务架构4个核心问题：
@@ -7,7 +6,6 @@
 2. 这么多服务，服务之间如何通信？
 3. 这么多服务，如何治理？
 4. 服务器挂了怎么办？
-
 
 
 
@@ -48,8 +46,6 @@
 新概念：服务网格->Server Mesh
 
 ​			istio
-
-
 
 # 1、常见面试题
 
@@ -1573,7 +1569,7 @@ Eureka看明白了这一点，因此在设计时就优先保证可用性，**Eur
 3. 在消费者添加Eureka配置
 
    ```yaml
-   # Eureka配置
+   #Eureka配置
    eureka:
      client:
        register-with-eureka: false   # 不向Eureka中注册自己
@@ -1657,15 +1653,6 @@ Eureka看明白了这一点，因此在设计时就优先保证可用性，**Eur
 1. 通过集成`AbstractLoadBalancerRule`方法编写自己的负载均衡方法。
 
    ```java
-   package com.MrLQQ.myrule;
-   
-   import com.netflix.loadbalancer.AbstractLoadBalancerRule;
-   import com.netflix.loadbalancer.ILoadBalancer;
-   import com.netflix.loadbalancer.Server;
-   
-   import java.util.List;
-   import com.netflix.client.config.IClientConfig;
-   
    public class LqqRandomRule extends AbstractLoadBalancerRule {
    
        // 每个服务访问5次，换下一个服务
@@ -1741,19 +1728,12 @@ Eureka看明白了这一点，因此在设计时就优先保证可用性，**Eur
        }
    }
    ```
-
+   
 2. 将自己的方法加入到Bean
 
    ```java
-   package com.MrLQQ.myrule;
-   
-   import com.netflix.loadbalancer.IRule;
-   import org.springframework.context.annotation.Bean;
-   import org.springframework.context.annotation.Configuration;
-   
    @Configuration
    public class LqqRule {
-   
    
        @Bean
        public IRule myRule(){
@@ -1761,19 +1741,10 @@ Eureka看明白了这一点，因此在设计时就优先保证可用性，**Eur
        }
    }
    ```
-
+   
 3. 在主方法使用`@RibbonClient`注解使用自己的负载均衡
 
    ```java
-   package com.MrLQQ.springcloud;
-   
-   import com.MrLQQ.myrule.LqqRule;
-   import org.springframework.boot.SpringApplication;
-   import org.springframework.boot.autoconfigure.SpringBootApplication;
-   import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-   import org.springframework.cloud.netflix.ribbon.RibbonClient;
-   
-   
    // Ribbon 和 Eureka 整合以后，客户端可以直接调用，不用关心IP地址和端口号
    @SpringBootApplication
    @EnableEurekaClient
@@ -1846,7 +1817,6 @@ Feign，主要是社区，大家都习惯面向接口编程。这个是很多开
    @FeignClient(value = "SPRINGCLOUD-PROVIDER-DEPT")
    public interface DeptClientService {
    
-   
        @GetMapping("/dept/get/{id}")
        public Dept queryById(@PathVariable("id") Long id);
    
@@ -1857,7 +1827,7 @@ Feign，主要是社区，大家都习惯面向接口编程。这个是很多开
        public boolean addDept(Dept dept);
    }
    ```
-
+   
 4. 并在feign模块中controller里使用接口服务
 
    ```java
@@ -1866,7 +1836,6 @@ Feign，主要是社区，大家都习惯面向接口编程。这个是很多开
    
        @Autowired
        private DeptClientService service = null;
-   
    
        @RequestMapping("/customer/dept/add")
        public boolean add(Dept dept){
@@ -1882,10 +1851,9 @@ Feign，主要是社区，大家都习惯面向接口编程。这个是很多开
        public List<Dept> list(){
            return this.service.queryAll();
        }
-   
    }
    ```
-
+   
 5. 在feign启动类中使用`@EnableFeigbClients()`开启Feign功能
 
    ```java
@@ -2117,7 +2085,6 @@ Feign，主要是社区，大家都习惯面向接口编程。这个是很多开
            <version>1.4.7.RELEASE</version>
        </dependency>
    
-   
        <dependency>
            <groupId>org.mrlqq</groupId>
            <artifactId>springcloud-api</artifactId>
@@ -2135,7 +2102,7 @@ Feign，主要是社区，大家都习惯面向接口编程。这个是很多开
    
    </dependencies>
    ```
-
+   
 3. 启动类中开启监控
 
    ```java
